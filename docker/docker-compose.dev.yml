@@ -1,0 +1,97 @@
+version: '3.8'
+
+services:
+  # Development version with hot reload and debug tools
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: builder  # Use builder stage for development
+    ports:
+      - "8080:8080"
+      - "5678:5678"  # Debugger port
+    environment:
+      - ENVIRONMENT=development
+      - DEBUG=true
+      - PYTHONUNBUFFERED=1
+    env_file:
+      - ../.env
+    volumes:
+      - ../src:/app/src
+      - ../config:/app/config
+      - ../tests:/app/tests
+      - ../data:/app/data
+      - ../logs:/app/logs
+    command: [
+      "python", "-m", "debugpy", "--listen", "0.0.0.0:5678",
+      "--wait-for-client", "-m", "uvicorn",
+      "src.main:app", "--host", "0.0.0.0", "--port", "8080",
+      "--reload", "--log-level", "debug"
+    ]
+    depends_on:
+      - redis
+      - postgres
+      - qdrant
+      - minio
+    networks:
+      - rag-network-dev
+
+  # Vector Database - Qdrant
+  qdrant:
+    extends:
+      file: ../docker-compose.yml
+      service: qdrant
+    networks:
+      - rag-network-dev
+
+  # PostgreSQL
+  postgres:
+    extends:
+      file: ../docker-compose.yml
+      service: postgres
+    networks:
+      - rag-network-dev
+
+  # Redis Cache
+  redis:
+    extends:
+      file: ../docker-compose.yml
+      service: redis
+    networks:
+      - rag-network-dev
+
+  # MinIO
+  minio:
+    extends:
+      file: ../docker-compose.yml
+      service: minio
+    networks:
+      - rag-network-dev
+
+  # Additional dev tools
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+    networks:
+      - rag-network-dev
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@example.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "8082:80"
+    depends_on:
+      - postgres
+    networks:
+      - rag-network-dev
+
+networks:
+  rag-network-dev:
+    driver: bridge
