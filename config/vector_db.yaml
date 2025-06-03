@@ -1,0 +1,144 @@
+# Vector Database Configuration
+
+# Qdrant Configuration
+qdrant:
+  host: "localhost"
+  port: 6333
+  grpc_port: 6334
+  prefer_grpc: true
+  https: false
+  api_key: ${QDRANT_API_KEY}
+  
+  # Collection settings
+  collections:
+    enterprise_docs:
+      vectors:
+        size: 3072
+        distance: "Cosine"
+        on_disk: false
+      
+      optimizers:
+        deleted_threshold: 0.2
+        vacuum_min_vector_number: 1000
+        default_segment_number: 8
+        max_segment_size: 200000
+        memmap_threshold: 50000
+        indexing_threshold: 20000
+        flush_interval_sec: 5
+        max_optimization_threads: 2
+      
+      hnsw_config:
+        m: 16
+        ef_construct: 200
+        full_scan_threshold: 10000
+        max_indexing_threads: 0
+        on_disk: false
+        payload_m: null
+      
+      quantization:
+        scalar:
+          type: "int8"
+          quantile: 0.99
+          always_ram: true
+    
+    # Specialized collections
+    confluence_docs:
+      vectors:
+        size: 1536
+        distance: "Cosine"
+      
+      payload_index:
+        - field: "space_key"
+          type: "keyword"
+        - field: "last_modified"
+          type: "datetime"
+        - field: "author"
+          type: "keyword"
+    
+    jira_issues:
+      vectors:
+        size: 1536
+        distance: "Cosine"
+      
+      payload_index:
+        - field: "project_key"
+          type: "keyword"
+        - field: "issue_type"
+          type: "keyword"
+        - field: "status"
+          type: "keyword"
+        - field: "priority"
+          type: "keyword"
+
+# pgvector Configuration (Alternative)
+pgvector:
+  connection:
+    host: "localhost"
+    port: 5432
+    database: "rag_vectors"
+    user: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    sslmode: "require"
+  
+  # Table configuration
+  tables:
+    document_vectors:
+      vector_dimensions: 3072
+      distance_function: "cosine"
+      index_type: "ivfflat"
+      index_lists: 1000
+      
+      # HNSW index (pgvector 0.5.0+)
+      hnsw_index:
+        m: 16
+        ef_construction: 200
+        ef_search: 100
+  
+  # Performance settings
+  performance:
+    work_mem: "256MB"
+    maintenance_work_mem: "512MB"
+    max_parallel_workers: 4
+    effective_cache_size: "4GB"
+
+# Hybrid Search Configuration
+hybrid_search:
+  # BM25 settings
+  bm25:
+    k1: 1.2
+    b: 0.75
+    index_type: "elasticsearch"  # or "tantivy"
+  
+  # Fusion settings
+  fusion:
+    method: "reciprocal_rank"  # or "linear", "learned"
+    vector_weight: 0.7
+    keyword_weight: 0.3
+    k: 60  # RRF parameter
+  
+  # Search settings
+  search:
+    vector_top_k: 20
+    keyword_top_k: 20
+    final_top_k: 10
+    min_score: 0.5
+
+# Sharding Configuration (for scale)
+sharding:
+  enabled: false
+  strategy: "hash"  # or "range"
+  num_shards: 4
+  replication_factor: 2
+  
+  # Shard assignment
+  shard_key: "tenant_id"  # for multi-tenancy
+  
+# Backup Configuration
+backup:
+  enabled: true
+  schedule: "0 2 * * *"  # Daily at 2 AM
+  retention_days: 30
+  storage:
+    type: "s3"
+    bucket: "rag-backups"
+    prefix: "vector-db/"

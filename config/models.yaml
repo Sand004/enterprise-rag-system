@@ -1,0 +1,105 @@
+# Model Configuration for Enterprise RAG System
+
+# Embedding Models
+embedding:
+  primary:
+    name: "text-embedding-3-large"
+    provider: "openai"
+    dimension: 3072
+    max_tokens: 8191
+    batch_size: 100
+  
+  secondary:
+    name: "text-embedding-3-small"
+    provider: "openai"
+    dimension: 1536
+    max_tokens: 8191
+    batch_size: 100
+  
+  local:
+    name: "BAAI/bge-large-en-v1.5"
+    provider: "huggingface"
+    dimension: 1024
+    max_tokens: 512
+    batch_size: 32
+    device: "cuda"
+
+# Language Models
+llm:
+  vllm:
+    primary:
+      name: "meta-llama/Llama-3.3-70B-Instruct"
+      quantization: "awq"
+      tensor_parallel_size: 4
+      max_model_len: 32768
+      gpu_memory_utilization: 0.9
+      dtype: "auto"
+    
+    secondary:
+      name: "mistralai/Mixtral-8x7B-Instruct-v0.1"
+      quantization: "awq"
+      tensor_parallel_size: 2
+      max_model_len: 32768
+      gpu_memory_utilization: 0.9
+    
+    specialized:
+      reasoning:
+        name: "Qwen/QwQ-32B-Preview"
+        quantization: "awq"
+        tensor_parallel_size: 2
+        max_model_len: 32768
+  
+  openai:
+    primary:
+      name: "gpt-4-turbo-preview"
+      max_tokens: 4096
+      temperature: 0.7
+      top_p: 0.95
+    
+    fast:
+      name: "gpt-3.5-turbo"
+      max_tokens: 4096
+      temperature: 0.7
+
+# Reranking Models
+reranking:
+  primary:
+    name: "rerank-english-v3.0"
+    provider: "cohere"
+    max_chunks_per_query: 1000
+  
+  local:
+    name: "BAAI/bge-reranker-large"
+    provider: "huggingface"
+    device: "cuda"
+    batch_size: 32
+
+# Cross-Encoder Models
+cross_encoder:
+  primary:
+    name: "cross-encoder/ms-marco-MiniLM-L-6-v2"
+    max_length: 512
+    device: "cuda"
+    batch_size: 16
+
+# Model Selection Rules
+selection_rules:
+  - condition: "document_type == 'technical'"
+    embedding_model: "local"
+    llm_model: "vllm.primary"
+  
+  - condition: "query_complexity == 'high'"
+    llm_model: "vllm.specialized.reasoning"
+    reranking_enabled: true
+  
+  - condition: "response_time_requirement < 1000"
+    embedding_model: "secondary"
+    llm_model: "openai.fast"
+    reranking_enabled: false
+
+# Performance Settings
+performance:
+  embedding_cache_size: 10000
+  llm_cache_size: 1000
+  batch_timeout_ms: 100
+  max_concurrent_requests: 100
