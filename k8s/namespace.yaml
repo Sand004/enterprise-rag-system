@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: rag-system
+  labels:
+    name: rag-system
+    app.kubernetes.io/name: enterprise-rag
+    app.kubernetes.io/instance: production
