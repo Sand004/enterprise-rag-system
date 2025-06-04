@@ -9,7 +9,7 @@ from loguru import logger
 from pydantic import BaseModel
 
 from ..api.auth import get_current_user, UserInfo
-from ..ingestion import PDFProcessor
+from ..ingestion import PDFProcessor, DOCXProcessor
 from ..ingestion.chunking import SemanticChunker
 from ..retrieval.vector_store import VectorStoreManager
 from ..utils.embeddings import EmbeddingManager
@@ -81,6 +81,8 @@ async def upload_document(
         # Select appropriate processor
         if file_ext == ".pdf":
             processor = PDFProcessor({"chunk_size": 1024, "chunk_overlap": 256})
+        elif file_ext == ".docx":
+            processor = DOCXProcessor({"chunk_size": 1024, "chunk_overlap": 256})
         else:
             raise HTTPException(
                 status_code=status.HTTP_501_NOT_IMPLEMENTED,
