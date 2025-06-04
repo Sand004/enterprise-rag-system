@@ -7,7 +7,7 @@
 ## 🚀 Overview
 
 A state-of-the-art, self-hosted enterprise RAG (Retrieval-Augmented Generation) system featuring:
-- Multi-format document processing (PDF, PPTX, Confluence, Jira)
+- Multi-format document processing (PDF, Confluence, Jira)
 - Advanced semantic search with hybrid retrieval
 - Self-hosted LLM deployment with quantization
 - Enterprise-grade security and compliance
@@ -19,7 +19,7 @@ A state-of-the-art, self-hosted enterprise RAG (Retrieval-Augmented Generation) 
 
 ### Document Processing
 - **Advanced OCR**: Nougat + GPT-4V for complex PDFs
-- **Multi-format Support**: PDF, PowerPoint, Confluence, Jira
+- **Multi-format Support**: PDF, Confluence, Jira
 - **Semantic Chunking**: Context-aware document splitting
 - **Metadata Extraction**: Automatic tagging and categorization
 
