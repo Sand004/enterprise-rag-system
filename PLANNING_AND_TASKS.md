@@ -7,7 +7,7 @@ Building a self-hosted, enterprise-grade RAG system with Atlassian integration, 
 - **Phase**: Foundation Implementation
 - **Last Updated**: 2025-06-04
 - **Current Sprint**: Foundation (Weeks 1-4)
-- **Progress**: ~60% of Foundation Phase Complete
+- **Progress**: ~65% of Foundation Phase Complete
 
 ## 🏗️ Architecture Components Status
 
@@ -27,9 +27,10 @@ Building a self-hosted, enterprise-grade RAG system with Atlassian integration, 
 #### Document Processing Pipeline
 - [x] Set up base document processor class
 - [x] Implement PDF processor with OCR support
-- [ ] Complete PowerPoint processor
+- [ ] Complete DOCX processor
 - [x] Create semantic chunking engine
 - [x] Add metadata extraction system
+- [x] ~~PowerPoint processor~~ (REMOVED - PowerPoint data no longer needed)
 
 #### Vector Database Setup
 - [x] Deploy Qdrant with Docker
@@ -90,9 +91,10 @@ Building a self-hosted, enterprise-grade RAG system with Atlassian integration, 
 3. ✅ Set up Docker and Kubernetes configurations
 4. ✅ Created CI/CD pipeline with GitHub Actions
 5. ✅ Comprehensive documentation (Architecture, API, Deployment)
+6. ✅ Removed PowerPoint processing functionality (no longer needed)
 
 #### Next Priority Tasks
-1. [ ] Complete PowerPoint and DOCX processors
+1. [ ] Complete DOCX processor
 2. [ ] Implement GraphRAG components
 3. [ ] Add more specialized agents
 4. [ ] Complete webhook implementations
@@ -100,6 +102,17 @@ Building a self-hosted, enterprise-grade RAG system with Atlassian integration, 
 6. [ ] Set up monitoring stack
 
 ## 📝 Code Action Log
+
+### 2025-06-04 (Update 2)
+- **Action**: Removed PowerPoint processing functionality
+- **Files Modified**:
+  - `src/ingestion/__init__.py` - Removed PowerPointProcessor import
+  - `src/api/ingestion.py` - Removed PPTX from allowed file types
+  - `README.md` - Removed PowerPoint/PPTX references
+  - `docs/API.md` - Updated API documentation to remove PPTX
+  - `PLANNING_AND_TASKS.md` - Updated to reflect PowerPoint removal
+- **Reason**: PowerPoint data is no longer needed for the system
+- **Next Steps**: Focus on DOCX processor and other document types
 
 ### 2025-06-04
 - **Action**: Major repository build-out
@@ -127,7 +140,7 @@ Building a self-hosted, enterprise-grade RAG system with Atlassian integration, 
 - **Next Steps**: Build out core functionality
 
 ## 🐛 Issues and Blockers
-- PowerPoint processor needs completion
+- DOCX processor needs implementation
 - GraphRAG implementation pending
 - Need to add more comprehensive tests
 - Webhook handlers not yet implemented
@@ -176,7 +189,7 @@ make lint
 ```
 
 ## 📈 Progress Summary
-- **Foundation Phase**: 60% Complete
+- **Foundation Phase**: 65% Complete
 - **Core Modules**: Implemented
 - **API Layer**: Basic implementation complete
 - **Infrastructure**: Docker/K8s configs ready
