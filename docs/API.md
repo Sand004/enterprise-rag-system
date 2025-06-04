@@ -83,7 +83,7 @@ Upload and process a document.
 - Content-Type: multipart/form-data
 
 **Form Data:**
-- `file`: Document file (PDF, PPTX, DOCX)
+- `file`: Document file (PDF, DOCX)
 - `metadata`: JSON string with document metadata (optional)
 
 **Example:**
