@@ -9,7 +9,7 @@ from loguru import logger
 from pydantic import BaseModel
 
 from ..api.auth import get_current_user, UserInfo
-from ..ingestion import PDFProcessor, PowerPointProcessor
+from ..ingestion import PDFProcessor
 from ..ingestion.chunking import SemanticChunker
 from ..retrieval.vector_store import VectorStoreManager
 from ..utils.embeddings import EmbeddingManager
@@ -46,7 +46,7 @@ async def upload_document(
     start_time = time.time()
     
     # Validate file type
-    allowed_types = [".pdf", ".pptx", ".docx"]
+    allowed_types = [".pdf", ".docx"]
     file_ext = os.path.splitext(file.filename)[1].lower()
     
     if file_ext not in allowed_types:
@@ -81,8 +81,6 @@ async def upload_document(
         # Select appropriate processor
         if file_ext == ".pdf":
             processor = PDFProcessor({"chunk_size": 1024, "chunk_overlap": 256})
-        elif file_ext == ".pptx":
-            processor = PowerPointProcessor({"chunk_size": 1024, "chunk_overlap": 256})
         else:
             raise HTTPException(
                 status_code=status.HTTP_501_NOT_IMPLEMENTED,
