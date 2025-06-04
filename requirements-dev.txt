@@ -1,0 +1,55 @@
+# Development Dependencies
+
+# Testing
+pytest==7.4.0
+pytest-asyncio==0.21.0
+pytest-cov==4.1.0
+pytest-mock==3.12.0
+pytest-timeout==2.1.0
+pytest-xdist==3.3.1
+hypothesis==6.82.0
+
+# Code Quality
+black==23.11.0
+isort==5.12.0
+flake8==6.1.0
+flake8-docstrings==1.7.0
+flake8-imports==0.1.1
+mypy==1.7.0
+pylint==3.0.0
+bandit==1.7.5
+safety==2.3.5
+
+# Documentation
+sphinx==7.2.6
+sphinx-rtd-theme==2.0.0
+sphinx-autodoc-typehints==1.25.2
+myst-parser==2.0.0
+
+# Development Tools
+ipython==8.17.0
+ipdb==0.13.13
+jupyter==1.0.0
+notebook==7.0.6
+jupyterlab==4.0.9
+
+# Debugging
+debugpy==1.8.0
+memory-profiler==0.61.0
+line-profiler==4.1.1
+
+# Pre-commit
+pre-commit==3.5.0
+
+# API Testing
+httpx==0.25.2
+respx==0.20.2
+
+# Mocking
+faker==20.1.0
+factory-boy==3.3.0
+
+# Type Stubs
+types-redis==4.6.0.11
+types-requests==2.31.0.10
+types-PyYAML==6.0.12.12
