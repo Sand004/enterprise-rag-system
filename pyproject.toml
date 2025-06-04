@@ -15,7 +15,6 @@ pydantic-settings = "^2.0.0"
 
 # Document Processing
 PyPDF2 = "^3.0.0"
-python-pptx = "^0.6.21"
 python-docx = "^0.8.11"
 unstructured = "^0.10.0"
 opencv-python = "^4.8.0"
